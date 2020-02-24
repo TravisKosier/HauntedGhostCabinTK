@@ -7,6 +7,9 @@ TagManager:
   - Floor
   - Win
   - Distraction
+  - McguffinRoom
+  - Hallway
+  - Yard
   layers:
   - Default
   - TransparentFX
@@ -21,7 +24,7 @@ TagManager:
   - Enemy
   - HallFloor
   - HallWalls
-  - 
+  - Door
   - 
   - 
   - 

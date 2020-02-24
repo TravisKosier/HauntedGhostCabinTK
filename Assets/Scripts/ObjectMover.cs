@@ -24,6 +24,8 @@ public class ObjectMover : MonoBehaviour
 
     public Transform playerCamera;
 
+    public bool isSeen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +37,8 @@ public class ObjectMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
         if (rb.velocity.y < 0) //'Realistic' object falling
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
@@ -43,21 +47,30 @@ public class ObjectMover : MonoBehaviour
         Ray ray = new Ray(playerCamera.position, playerCamera.forward);
         RaycastHit raycastHit;
 
-        if (Input.GetKeyDown(KeyCode.JoystickButton2) && !isHolding)
+        if (Physics.Raycast(ray, out raycastHit))
         {
-            if (Physics.Raycast(ray, out raycastHit))
+            if (raycastHit.collider.transform == this.transform) //Object is being looked at by player
             {
-                if (raycastHit.collider.transform == this.transform)
+                isSeen = true;
+                if (isSeen) { Debug.Log("Seen"); }
+                if (Input.GetKeyDown(KeyCode.JoystickButton2) && !isHolding)
                 {
                     OnMouseDown();
-                    isHolding = true;
+                    
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.JoystickButton2) && isHolding)
+            {
+                OnMouseUp();
+                
+            }
+            else
+            {
+                isSeen = false;
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.JoystickButton2) && isHolding)
-        {
-            OnMouseUp();
-            isHolding = false;
+        else {
+            isSeen = false;
         }
     }
 
@@ -71,6 +84,7 @@ public class ObjectMover : MonoBehaviour
             item.transform.rotation = guide.transform.rotation;
             item.transform.parent = tempParent.transform;
         }
+        isHolding = true;
     }
   
 
@@ -84,6 +98,7 @@ public class ObjectMover : MonoBehaviour
             item.transform.position = guide.transform.position;
             rb.AddRelativeForce(new Vector3(0, 0, throwStrength), ForceMode.Impulse);
         }
+        isHolding = false;
     }
 
     private void OnCollisionEnter(Collision other)

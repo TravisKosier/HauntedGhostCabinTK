@@ -14,6 +14,8 @@ public class PlayerMover : MonoBehaviour
 
     public GameObject pauseScreen;
 
+    public string currentRoom;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +52,22 @@ public class PlayerMover : MonoBehaviour
                 pauseScreen.SetActive(false);
                 //hidePaused();
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("McguffinRoom"))
+        {
+            currentRoom = "mcguffinroom";
+        }
+        if (other.CompareTag("Hallway"))
+        {
+            currentRoom = "hallway";
+        }
+        if (other.CompareTag("Yard"))
+        {
+            currentRoom = "yard";
         }
     }
 }
